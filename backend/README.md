@@ -3,6 +3,7 @@ Node project for Fantasy League App.
 
 # Folder structure
 ```
+src
  |- controllers: To get requested data from models
  |- middlewares: As the name suggests, all the middleware should reside here
  |- models: All the models in this folder

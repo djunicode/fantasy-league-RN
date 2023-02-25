@@ -21,7 +21,7 @@ There will be 3 branches
 
 _Apart from the 3 branches above you can create as many branches as you want._
 
-__*NOBODY SHOULD MAKE PULL REQUEST TO MAIN BRANCH. All changes should be made to either frontend or backend depending on where you are working.*__
+__*NOBODY SHOULD MAKE PULL REQUEST TO MAIN BRANCH. All changes should be made to either app or backend depending on where you are working.*__
 
 
 # Folder structure

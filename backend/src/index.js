@@ -1,7 +1,7 @@
 const express = require('express')
 const morgan = require('morgan')
 const app=express()
-const dotenv=require('dotenv').config()
+const dotenv=require('dotenv').config({path:'src/.env'})
 PORT=process.env.PORT
 const user=require('./routes/userRoutes')
 

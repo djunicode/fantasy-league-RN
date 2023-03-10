@@ -4,6 +4,7 @@ const bcrypt=require('bcrypt')
 const app=express()
 app.use(express.json())
 const dotenv=require('dotenv').config({path:'src/.env'})
+const {sendEmail}=require('../utility/functions')
 const SECRET_KEY=process.env.SECRET_KEY
 const User=require('../models/userSchema')
 
@@ -17,6 +18,7 @@ const newUser=async(req,res)=>{
         const token=jwt.sign({_id:user._id},SECRET_KEY,{expiresIn:'1d'}) //generating jwt
         user.tokens=user.tokens.concat({token}) //saving token in tokens field of db
         await user.save()
+        await sendEmail({emailId:email,subject:'Signed up',message:'Verification mail for your account on fantasyLeague'})
         return res.status(200).json({token:token,user})
     } catch (error) {
         res.status(400).json({message:error.message})
@@ -39,6 +41,7 @@ const userLogin=async(req,res)=>{
                const token=jwt.sign({_id:userData._id},SECRET_KEY,{expiresIn:'1d'}) //generating jwt
                userData.tokens=userData.tokens.concat({token}) //saving token in tokens field of db
                await userData.save()
+               await sendEmail({emailId:email,subject:'Logged In',message:'Verification mail for login on fantasyLeague'})
                return res.status(200).json({token:token,userData})
             }
 

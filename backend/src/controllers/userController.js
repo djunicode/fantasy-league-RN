@@ -14,10 +14,10 @@ const newUser=async(req,res)=>{
         if(!username || !email || !password || !mobile)
         return res.status(400).json({message:'Please fill all details'})
         const user=new User(req.body)
-        //await //user.save()
         const token=jwt.sign({_id:user._id},SECRET_KEY,{expiresIn:'1d'}) //generating jwt
         user.tokens=user.tokens.concat({token}) //saving token in tokens field of db
         await user.save()
+        //sending verification mail
         await sendEmail({emailId:email,subject:'Signed up',message:'Verification mail for your account on fantasyLeague'})
         return res.status(200).json({token:token,user})
     } catch (error) {
@@ -41,6 +41,7 @@ const userLogin=async(req,res)=>{
                const token=jwt.sign({_id:userData._id},SECRET_KEY,{expiresIn:'1d'}) //generating jwt
                userData.tokens=userData.tokens.concat({token}) //saving token in tokens field of db
                await userData.save()
+               //sending verification mail
                await sendEmail({emailId:email,subject:'Logged In',message:'Verification mail for login on fantasyLeague'})
                return res.status(200).json({token:token,userData})
             }
@@ -54,6 +55,7 @@ const logout=async(req,res)=>{
     try {
         const user=userData
         const tkn=req.header('AuthenticateUser').split(' ')[1]
+        //removing the logged in token from db
         user.tokens=user.tokens.filter((token)=>{
         return token.token!=tkn
         })
@@ -72,6 +74,7 @@ const logoutAll=async(req,res)=>{
             }
             else{
                 const tokens=userData.tokens
+                //removing all tokens from db
                 await User.findByIdAndUpdate(userData._id,{tokens:[]})
                 res.status(200).json({message:'Successfully logged out'})
             }

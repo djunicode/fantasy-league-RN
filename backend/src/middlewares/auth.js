@@ -16,6 +16,7 @@ const authentication={
             try {
                 const data=jwt.verify(tkn,process.env.SECRET_KEY)
                 const user=await User.findById(data._id)
+                //comparing token in header with each token in db
                 user.tokens.forEach(token => {
                     if(tkn===token.token)
                     flag=1

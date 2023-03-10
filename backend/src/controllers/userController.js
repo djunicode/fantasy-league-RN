@@ -50,4 +50,35 @@ const userLogin=async(req,res)=>{
     } 
 }
 
-module.exports={newUser,userLogin}
+const logout=async(req,res)=>{
+    try {
+        const user=userData
+        const tkn=req.header('AuthenticateUser').split(' ')[1]
+        user.tokens=user.tokens.filter((token)=>{
+        return token.token!=tkn
+        })
+        await user.save()
+        res.status(200).json({message:'Logged Out',user})
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
+const logoutAll=async(req,res)=>{
+    try{
+
+            const tkn=req.header('AuthenticateUser').split(' ')[1]
+            if(!tkn){
+                res.status(400).json({message: 'Auth failed'})
+            }
+            else{
+                const tokens=userData.tokens
+                await User.findByIdAndUpdate(userData._id,{tokens:[]})
+                res.status(200).json({message:'Successfully logged out'})
+            }
+        
+    }catch(error){
+        res.status(400).json({error:'Error'})
+    }
+}
+
+module.exports={newUser,userLogin,logout,logoutAll}

@@ -1,66 +1,67 @@
-const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const validator = require('validator')
-const bcrypt = require('bcrypt')
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const validator = require('validator');
+const bcrypt = require('bcrypt');
 
-const userSchema=new mongoose.Schema(
+const userSchema = new mongoose.Schema(
     {
-        username:{
-            type:String,
-            unique:[true,'Username already exists'],
-            required:true
-            },
-        email:{
-            type:String,
-            required:true,
-            unique:[true,'email-id exists'],
-            lowercase:true,
-            validate(value){
-            if(!validator.isEmail(value)){
-                throw new Error('Invalid Email-Id')
+        username: {
+            type: String,
+            unique: [true, 'Username already exists'],
+            required: true
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: [true, 'email-id exists'],
+            lowercase: true,
+            validate(value) {
+                if (!validator.isEmail(value)) {
+                    throw new Error('Invalid Email-Id');
+                }
             }
-        }
         },
         password: {
             type: String,
             minlength: [8, 'Password must contain minimum 8 characters'],
-            required:true
+            required: true
         },
-        mobile:{
-            type:Number,
-            required:true,
-            unique:[true,'mobile no. exists'],
-            length:[10,'Mobile Number must be 10 digits '],
+        mobile: {
+            type: Number,
+            required: true,
+            unique: [true, 'mobile no. exists'],
+            length: [10, 'Mobile Number must be 10 digits ']
         },
-        profilePic:{
-            type:String
+        profilePic: {
+            type: String
         },
-        balance:{
-            type:Number
+        balance: {
+            type: Number
         },
-        tokens:[
+        tokens: [
             {
-                token:{
-                    type:String,
-                    required:true
+                token: {
+                    type: String,
+                    required: true
                 }
             }
         ]
-    },{timestamps:true}
-    )
+    },
+    { timestamps: true }
+);
 
 //logging out user details
 userSchema.post('save', function (doc, next) {
-        console.log('new User created', doc);
-        next();
-})
+    console.log('new User created', doc);
+    next();
+});
 
-//hashing password 
+//hashing password
 userSchema.pre('save', async function (next) {
-        if (this.isModified('password')) {
-            this.password = await bcrypt.hash(this.password, 9);
-        }
-})
-const User=mongoose.model('User',userSchema) //collection
+    if (this.isModified('password')) {
+        this.password = await bcrypt.hash(this.password, 9);
+    }
+});
+const User = mongoose.model('User', userSchema); //collection
 
-module.exports=User
+module.exports = User;

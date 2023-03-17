@@ -6,10 +6,6 @@ info:
     - url: "http://localhost:5000"
     - description: Local server
 schemes: [http,https]
-produces : 
-      - application/json
-consumes: 
-      - application/json
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -22,6 +18,10 @@ paths:
   /user/newUser :
     post :
       summary: new user sign up
+      produces : 
+        - application/json
+      consumes: 
+        - application/json
       parameters: 
         - in : body
           schema: 
@@ -42,26 +42,78 @@ paths:
       responses :
         200:
           description : Successfully Registered
+          schema :
+            type : object
+            properties : 
+              token :
+                type : jwt
+                default : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDEzZWQ4MTAwYzgzMDM5NmQ0MzhjZTIiLCJpYXQiOjE2NzkwNDY1NjIsImV4cCI6MTY3OTEzMjk2Mn0.EqnN-Yd0NGu9eBUDs4zjl52K0oRSAFrGON2WZYqFQnI"
+              user :
+                type : object
+                properties :
+                  _id : 
+                    type : string
+                    default : "6413ed8100c830396d438ce2"
+                  username : 
+                    type : string
+                    default: "testUser"
+                  email :
+                    type : string
+                    default : "testuser@gmail.com"
+                  password :
+                    type : string
+                    default : "$2b$09$2E0zVqrt699Zrw8r7LzoROCQG3dEH8f97556ayWNktAksEpOWoNba"
+                  mobile :
+                    type : number
+                    default : 9187263504
         400 :
           description : Error in registering user
   #logging in user
   /user/userLogin :
     post :
       summary : logging user
+      produces : 
+        - application/json
+      consumes: 
+        - application/json
       parameters :
         - in : body
           schema :
             type : object
             properties :
-              email : 
+              email :
                 type : string
                 default : "testuser@gmail.com"
-              password :
+              password : 
                 type : string
                 default : "asdfghjkl"
       responses :
         200 : 
           description : Logged In Successfully
+          schema :
+            type : object
+            properties : 
+              token :
+                type : jwt
+                default : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NDEzZWQ4MTAwYzgzMDM5NmQ0MzhjZTIiLCJpYXQiOjE2NzkwNDY1NjIsImV4cCI6MTY3OTEzMjk2Mn0.EqnN-Yd0NGu9eBUDs4zjl52K0oRSAFrGON2WZYqFQnI"
+              userData :
+                type : object
+                properties :
+                  _id : 
+                    type : string
+                    default : "6413ed8100c830396d438ce2"
+                  username : 
+                    type : string
+                    default: "testUser"
+                  email :
+                    type : string
+                    default : "testuser@gmail.com"
+                  password :
+                    type : string
+                    default : "$2b$09$2E0zVqrt699Zrw8r7LzoROCQG3dEH8f97556ayWNktAksEpOWoNba"
+                  mobile :
+                    type : number
+                    default : 9187263504
         400 : 
           description : Error in logging in
   #logout
@@ -73,6 +125,12 @@ paths:
       responses :
         200 :
           description : Logged Out 
+          schema :
+            type : object
+            properties :
+              message : 
+                type : string
+                default : "Logged Out"
         400 :
           description : Error in logging out
         401 :
@@ -86,6 +144,12 @@ paths:
       responses :
         200 :
           description : Logged out of all sessions
+          schema : 
+            type : object
+            properties : 
+              message : 
+                type : string
+                default : "Successfully logged out"
         400 :
           description : Error in logging out of all sessions
         401 :

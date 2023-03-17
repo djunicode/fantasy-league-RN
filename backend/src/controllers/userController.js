@@ -72,7 +72,7 @@ const logout = async (req, res) => {
             return token.token != tkn;
         });
         await user.save();
-        res.status(200).json({ message: 'Logged Out', user });
+        res.status(200).json({ message: 'Logged Out' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

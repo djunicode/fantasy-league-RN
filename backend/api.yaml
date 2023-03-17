@@ -1,0 +1,92 @@
+swagger: "2.0"
+info:
+  title: Fantasy League
+  version: 1.0
+  servers:
+    - url: "http://localhost:5000"
+    - description: Local server
+schemes: [http,https]
+produces : 
+      - application/json
+consumes: 
+      - application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: AuthenticateUser
+    in: header
+    description: Enter your JWT Bearer token to authenticate your request.
+
+paths:
+  #newUser
+  /user/newUser :
+    post :
+      summary: new user sign up
+      parameters: 
+        - in : body
+          schema: 
+            type: object
+            properties :
+              username :
+                type: string
+                default : "testUser"
+              email :
+                type: string
+                default : "testuser@gmail.com"
+              password :
+                type: string
+                default : "asdfghjkl"
+              mobile :
+                type : number
+                default : 9187263504
+      responses :
+        200:
+          description : Successfully Registered
+        400 :
+          description : Error in registering user
+  #logging in user
+  /user/userLogin :
+    post :
+      summary : logging user
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              email : 
+                type : string
+                default : "testuser@gmail.com"
+              password :
+                type : string
+                default : "asdfghjkl"
+      responses :
+        200 : 
+          description : Logged In Successfully
+        400 : 
+          description : Error in logging in
+  #logout
+  /user/logout :
+    get :
+      summary : logging out user
+      security :
+        - Bearer : []
+      responses :
+        200 :
+          description : Logged Out 
+        400 :
+          description : Error in logging out
+        401 :
+          description : Unauthorized
+  #logout all sessions
+  /user/logoutAll :
+    get :
+      summary :  logging user out of all sessions
+      security :
+        - Bearer : []
+      responses :
+        200 :
+          description : Logged out of all sessions
+        400 :
+          description : Error in logging out of all sessions
+        401 :
+          description : Unauthorized

@@ -32,7 +32,4 @@ const sendEmail = async ({ emailId, subject, message }) => {
     }
 };
 
-function email() {
-    console.log('test');
-}
 module.exports = { sendEmail };

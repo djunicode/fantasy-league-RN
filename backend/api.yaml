@@ -154,3 +154,78 @@ paths:
           description : Error in logging out of all sessions
         401 :
           description : Unauthorized
+  #forgot password
+  /user/forgotPass :
+    post :
+      summary : Forgot Password
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              email :
+                type : string
+                default : "testuser@gmail.com"
+      responses :
+        200 :
+          description : OTP sent on email
+          schema :
+            type : object
+            properties :
+              message :
+                type : string
+                default : "OTP sent on registered email"
+        400 :
+          description : Error in sending otp
+  #verify otp
+  /user/verifyOtp :
+    post :
+      summary : verifying otp
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              email :
+                type : string
+                default : "testuser@gmail.com"
+              otp :
+                type : number
+                default : 1234
+      responses :
+        200 : 
+          description : OTP verified
+          schema :
+            type : object
+            properties :
+              message :
+                type: string
+                default : "otp verified"
+        400 :
+          description : error in verifying otp
+  #new password
+  /user/newPass :
+    post :
+      summary : set new password after otp verification
+      parameters : 
+        - in : body
+          schema :
+            type : object
+            properties : 
+              email:
+                type : string
+                default: "testuser@gmail.com"
+              password:
+                type: string
+                default: "newpassword"
+      responses :
+        200 :
+          description : password updated
+          schema :
+            type : object
+            properties : 
+              message :
+                type : string
+                default : "password updated"
+        400 :
+          description : error in updating password

@@ -33,6 +33,7 @@ const newUser = async (req, res) => {
 
 const userLogin = async (req, res) => {
     const { email, password } = req.body;
+    console.log(req.body);
     if (!email || !password)
         return res.status(400).json({ message: 'Please Fill the Details' });
     try {
@@ -77,6 +78,7 @@ const logout = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
 const logoutAll = async (req, res) => {
     try {
         const tkn = req.header('AuthenticateUser').split(' ')[1];
@@ -93,4 +95,67 @@ const logoutAll = async (req, res) => {
     }
 };
 
-module.exports = { newUser, userLogin, logout, logoutAll };
+const forgotPass = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email: email }); //checking if email present in db
+        if (!user) return res.status(400).json({ message: 'No user found' });
+        const otp = Math.floor(Math.random() * 10000);
+        await User.findByIdAndUpdate(user._id, {
+            otp: otp,
+            otpExpire: new Date().getTime() + 300 * 1000 //setting expire time for 5 mins
+        });
+        await sendEmail({
+            emailId: email,
+            subject: 'OTP for your account at FantasyLeague App',
+            message: `OTP to reset password is ${otp},  Otp valid for 5 mins`
+        });
+        res.status(200).json({ message: 'OTP sent on registered email' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const verifyOtp = async (req, res) => {
+    try {
+        const { otp, email } = req.body;
+        let currentTime = new Date().getTime();
+        const user = await User.findOne({ email: email });
+        let diff = user.otpExpire - currentTime;
+        if (diff < 0)
+            // checking if otp is expired or not
+            return res.status(400).json({ message: 'Time limit exceeded' });
+        if (!otp) res.status(400).json({ error: 'Please enter otp!!!' });
+        else if (otp == user.otp) {
+            return res.status(200).json({ message: 'otp verified' });
+        } else {
+            return res.status(400).json({ message: 'invalid otp' });
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+const newPass = async (req, res) => {
+    try {
+        const { password, email } = req.body;
+        const user = await User.findOne({ email: email });
+        if (!password)
+            return res.status(400).json({ message: 'Please enter details' });
+        user.password = password; //updating password
+        await user.save();
+        res.status(200).json({ message: 'password updated' });
+    } catch (err) {
+        console.log(err);
+    }
+};
+
+module.exports = {
+    newUser,
+    userLogin,
+    logout,
+    logoutAll,
+    forgotPass,
+    verifyOtp,
+    newPass
+};

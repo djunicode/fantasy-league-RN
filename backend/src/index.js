@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const cron=require('node-cron')
 const app = express();
 const dotenv = require('dotenv').config({ path: 'src/.env' });
 PORT = process.env.PORT;
@@ -9,7 +10,10 @@ PORT = process.env.PORT;
 const user = require('./routes/userRoutes');
 
 //connection to database
-require('./dbConnect');
+cron.schedule('* * * * * *',function(){
+    require('./dbConnect');
+})
+
 
 //formatting data
 app.use(cors());

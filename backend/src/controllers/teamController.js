@@ -7,13 +7,32 @@ const dotenv = require('dotenv').config({ path: 'src/.env' });
 const Team=require('../models/teamSchema')
 const User=require('../models/userSchema')
 const axios=require('axios')
+var request = require("request");
+function playersData(matchId){
+    var players
+    var options = {
+  method: 'GET',
+  url: 'https://v3.football.api-sports.io/fixtures/lineups',
+  qs: {fixture: `${matchId}`},
+  headers: {
+    'x-rapidapi-host': 'v3.football.api-sports.io',
+    'x-rapidapi-key': 'XxXxXxXxXxXxXxXxXxXxXxXx'
+  }
+};
 
+request(options, function (error, response, body) {
+	if (error) throw new Error(error);
+	console.log(body);
+    players=body
+});
+return players
+}
 
 const gk=async(req,res)=>{
     try {
         const gk1=[],gk2=[],gkSub1=[],gkSub2=[]
         const { matchId }=req.body
-        const data="to be fetched from api"
+        const data=playersData(matchId)
         const team1=data.response.team[0].startXI
         const team2=data.response.team[1].startXI
         const substi1=data.response.team[0].substitutes
@@ -45,7 +64,7 @@ const def=async(req,res)=>{
     try {
         const def1=[],def2=[],defSub1=[],defSub2=[]
         const { matchId }=req.body
-        const data="to be fetched from api"
+        const data=playersData(matchId)
         const team1=data.response.team[0].startXI
         const team2=data.response.team[1].startXI
         const substi1=data.response.team[0].substitutes
@@ -77,7 +96,7 @@ const mid=async(req,res)=>{
     try {
         const mid1=[],mid2=[],midSub1=[],midSub2=[]
         const { matchId }=req.body
-        const data="to be fetched from api"
+        const data=playersData(matchId)
         const team1=data.response.team[0].startXI
         const team2=data.response.team[1].startXI
         const substi1=data.response.team[0].substitutes
@@ -109,7 +128,7 @@ const forw=async(req,res)=>{
     try {
         const forw1=[],forw2=[],forwSub1=[],forwSub2=[]
         const { matchId }=req.body
-        const data="to be fetched from api"
+        const data=playersData(matchId)
         const team1=data.response.team[0].startXI
         const team2=data.response.team[1].startXI
         const substi1=data.response.team[0].substitutes
@@ -139,7 +158,11 @@ const forw=async(req,res)=>{
 
 const teamSelect=async(req,res)=>{
     try {
-        const { matchId,players:[{name,number,pos}],cap,vc}=req.body
+        const { matchId,matchDate,players:[{name,number,pos}],cap,vc}=req.body
+        const currentTime=new Date().getTime()
+        const matchTime=matchDate.getTime()
+        if(matchTime>currentTime)
+        {
         const team=new Team({user:userData._id,match:matchId})
         for(i=0,j=0,k=0,l=0;i<req.body.players.size;i++)    
         {
@@ -165,6 +188,11 @@ const teamSelect=async(req,res)=>{
         team.vc=vc
         await team.save
         res.status(200).json({team})
+    }
+    else
+    {
+        res.status(400).json({message:'Deadline passed'})
+    }
     } catch (error) {
         return res.status(400).json({message:error.message})
     }

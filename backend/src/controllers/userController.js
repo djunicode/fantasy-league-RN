@@ -150,6 +150,22 @@ const newPass = async (req, res) => {
     }
 };
 
+const searchedUsers=async(req,res)=>{
+    try {
+        const {search}=req.body
+        const keyword=search?{
+            $or:[
+                {username:{$regex:search}},
+                {email:{$regex:search}}
+            ]
+        }:{}
+        const users=await User.find(keyword).find({_id:{$ne:userData._id}})
+        res.status(200).json({users})
+    } catch (error) {
+        res.status(400).json({message:error.message})
+    }
+}
+
 module.exports = {
     newUser,
     userLogin,
@@ -157,5 +173,6 @@ module.exports = {
     logoutAll,
     forgotPass,
     verifyOtp,
-    newPass
+    newPass,
+    searchedUsers
 };

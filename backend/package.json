@@ -29,6 +29,8 @@
         "node-cron": "^3.0.2",
         "nodemailer": "^6.9.1",
         "nodemon": "^2.0.21",
+        "request": "^2.88.2",
+        "socket.io": "^4.6.1",
         "swagger-ui-express": "^4.6.2",
         "validator": "^13.9.0",
         "yamljs": "^0.3.0"

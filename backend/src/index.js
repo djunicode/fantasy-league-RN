@@ -8,7 +8,7 @@ PORT = process.env.PORT;
 
 //importing routes
 const user = require('./routes/userRoutes');
-
+const team=require('./routes/teamRoutes')
 //connection to database
 cron.schedule('* * * * * *',function(){
     require('./dbConnect');
@@ -30,6 +30,7 @@ app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJSDocs));
 
 //assigning routes
 app.use('/user', user);
+app.use('/team',team)
 
 //error handling for no route found
 app.use((req, res, next) => {

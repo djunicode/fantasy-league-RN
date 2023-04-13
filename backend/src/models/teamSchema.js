@@ -5,27 +5,33 @@ const bcrypt = require('bcrypt');
 
 const teamSchema = new mongoose.Schema(
     {
-        gk:{
-            type:String
+        gk: {
+            type: String
         },
-        def:[{
-            player:{
-                type:String
-            },
-            _id:false
-        }],
-        mid:[{
-            player:{
-                type:String
-            },
-            _id:false
-        }],
-        forw:[{
-            player:{
-                type:String
-            },
-            _id:false
-        }],
+        def: [
+            {
+                player: {
+                    type: String
+                },
+                _id: false
+            }
+        ],
+        mid: [
+            {
+                player: {
+                    type: String
+                },
+                _id: false
+            }
+        ],
+        forw: [
+            {
+                player: {
+                    type: String
+                },
+                _id: false
+            }
+        ],
         credits: {
             type: Number
         },

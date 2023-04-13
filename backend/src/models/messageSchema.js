@@ -5,17 +5,17 @@ const bcrypt = require('bcrypt');
 
 const messageSchema = new mongoose.Schema(
     {
-        sender:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'User'
+        sender: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         },
-        contest:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Contest'
+        contest: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Contest'
         },
-        chat:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'Chat'
+        chat: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Chat'
         }
     },
     { timestamps: true }

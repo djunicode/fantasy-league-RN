@@ -4,8 +4,8 @@ const authentication = require('../middlewares/auth');
 const {
     sendMessage,
     allMessages
-}=require('../controllers/messageController')
-router.post('/sendMessage',authentication.verifyToken,sendMessage)
-router.post('/allMessages',authentication.verifyToken,allMessages)
+} = require('../controllers/messageController');
+router.post('/sendMessage', authentication.verifyToken, sendMessage);
+router.post('/allMessages', authentication.verifyToken, allMessages);
 
-module.exports=router
+module.exports = router;

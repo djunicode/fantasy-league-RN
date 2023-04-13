@@ -8,13 +8,13 @@ const {
     forw,
     teamSelect,
     teamDisp
-}=require('../controllers/teamController')
+} = require('../controllers/teamController');
 
-router.get('/gk',authentication.verifyToken,gk)
-router.get('/def',authentication.verifyToken,def)
-router.get('/mid',authentication.verifyToken,mid)
-router.get('/forw',authentication.verifyToken,forw)
-router.post('/teamSelect',authentication.verifyToken,teamSelect)
-router.get('/teamDisp',authentication.verifyToken,teamDisp)
+router.get('/gk', authentication.verifyToken, gk);
+router.get('/def', authentication.verifyToken, def);
+router.get('/mid', authentication.verifyToken, mid);
+router.get('/forw', authentication.verifyToken, forw);
+router.post('/teamSelect', authentication.verifyToken, teamSelect);
+router.get('/teamDisp', authentication.verifyToken, teamDisp);
 
-module.exports=router
+module.exports = router;

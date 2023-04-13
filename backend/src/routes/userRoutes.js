@@ -19,5 +19,5 @@ router.get('/logoutAll', authentication.verifyToken, logoutAll);
 router.post('/forgotPass', forgotPass);
 router.post('/verifyOtp', verifyOtp);
 router.post('/newPass', newPass);
-router.post('/searchedUsers',authentication.verifyToken,searchedUsers)
+router.post('/searchedUsers', authentication.verifyToken, searchedUsers);
 module.exports = router;

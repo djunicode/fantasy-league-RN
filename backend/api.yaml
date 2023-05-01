@@ -229,3 +229,237 @@ paths:
                 default : "password updated"
         400 :
           description : error in updating password
+  #searched users
+  /user/searchedUsers :
+    post :
+      summary : give result of users on the basis of search criteria
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              search :
+                type : string
+                default : "test"
+      responses :
+        200 :
+          description : searched users
+          schema :
+            type : array
+            items :
+              type : object
+              properties :
+                _id : 
+                  type : string
+                  default : "6413ed8100c830396d438ce2"
+                username : 
+                  type : string
+                  default: "testUser"
+                email :
+                  type : string
+                  default : "testuser@gmail.com"
+                password :
+                  type : string
+                  default : "$2b$09$2E0zVqrt699Zrw8r7LzoROCQG3dEH8f97556ayWNktAksEpOWoNba"
+                mobile :
+                  type : number
+                  default : 9187263504
+        400 :
+          description : error in searching users
+  #access or create chat
+  /chat/accessChat :
+    post :
+        summary : acceses or creates chat with given userId
+        security :
+          - Bearer : []
+        parameters :
+          - in : body
+            schema :
+              type : object
+              properties :
+                userId :
+                  type : string
+                  default : "6408c677da9ad762aac512f3"
+        responses :
+          200 :
+            description : chat
+            schema :
+              type : object
+              properties :
+                fullChat:
+                  type : object
+                  properties:
+                    _id :
+                      type : string
+                      default : "644f61149f2b38292f649635"
+                    users : 
+                      type : array
+                      items :
+                        type : object
+                        properties :
+                          _id :
+                            type: string
+                            default : "6408c64dde08732451928e83"
+                          username :
+                            type : string
+                            default : "devansh"
+                          email :
+                            type : string
+                            default : "xyz@gmail.com"
+                          mobile :
+                            type : number
+                            default : 9819778389
+          400 :
+            description : error in accessing chat
+  #fetch chat
+  /chat/fetchChats :
+    get :
+      summary : fetches user chats
+      security :
+        - Bearer : []
+      responses :
+        200 :
+          description : results
+          schema :
+            type : array
+            items :
+              type : object
+              properties :
+                _id :
+                  type : string
+                  default : "644f61149f2b38292f649635"
+                users : 
+                  type : array
+                  items :
+                    type : object
+                    properties: 
+                      _id :
+                        type: string
+                        default : "6408c64dde08732451928e83"
+                      username :
+                        type : string
+                        default : "devansh"
+                      email :
+                        type : string
+                        default : "xyz@gmail.com"
+                      mobile :
+                        type : number
+                        default : 9819778389
+        400 :
+          description : error in fetching chats
+  #send message
+  /message/sendMessage :
+    post :
+      summary : sends message
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              chatId :
+                type : string
+                default : "644f61149f2b38292f649635"
+              content :
+                type : string
+                default : "hello world"
+      responses :
+        200 :
+          description : message sent succesfully
+          schema :
+            type : object
+            properties :
+              message :
+                type : object
+                properties :
+                  sender :
+                    type: object
+                    properties :
+                      _id:
+                        type: string
+                        default : "6408c64dde08732451928e83"
+                      username :
+                        type: string
+                        default : "devansh"
+                  chat :
+                    type: object
+                    properties :
+                      _id :
+                        type : string
+                        default : "644f61149f2b38292f649635"
+                      users :
+                        type : array
+                        items :
+                          type : object
+                          properties :
+                            _id :
+                              type: string
+                              default : "6408c64dde08732451928e83"
+                            username :
+                              type : string
+                              default : "devansh"
+                            email :
+                              type : string
+                              default : "xyz@gmail.com"
+                  _id :
+                    type: string
+                    default : "644f6eb451b9596c21c27d43"
+        400 :
+          description: error in sending message
+  #all messages
+  /message/allMessages:
+    post :
+      summary : sends message
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              chatId :
+                type : string
+                default : "644f61149f2b38292f649635"
+      responses :
+        200 :
+          description: all messages
+          schema:
+            type : object
+            properties :
+              messages :
+                type : array
+                items :
+                  type: object
+                  properties :
+                    _id :
+                      type: string
+                      default : "644f6eb451b9596c21c27d43"
+                    sender :
+                      type : object
+                      properties :
+                        _id :
+                          type: string
+                          default : "6408c64dde08732451928e83"
+                        username :
+                          type : string
+                          default : "devansh"
+                        email :
+                          type : string
+                          default : "xyz@gmail.com"
+                    chat :
+                      type : object
+                      properties :
+                        _id :
+                          type: string
+                          default: "644f61149f2b38292f649635"
+                        users: 
+                          type: array
+                          items :
+                            type : string
+                        latestMsg:
+                          type: string
+        400 :
+          description : error                

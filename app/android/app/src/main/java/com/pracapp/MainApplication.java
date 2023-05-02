@@ -1,4 +1,4 @@
-package com.fantasyleagueapp;
+package com.pracapp;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

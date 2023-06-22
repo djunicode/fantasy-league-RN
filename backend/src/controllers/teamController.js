@@ -4,139 +4,54 @@ const bcrypt = require('bcrypt');
 const app = express();
 app.use(express.json());
 const dotenv = require('dotenv').config({ path: 'src/.env' });
+const unirest = require('unirest');
 const Team = require('../models/teamSchema');
 const User = require('../models/userSchema');
 const axios = require('axios');
 var request = require('request');
-function playersData(matchId) {
-    var players;
-    var options = {
-        method: 'GET',
-        url: 'https://v3.football.api-sports.io/fixtures/lineups',
-        qs: { fixture: `${matchId}` },
-        headers: {
-            'x-rapidapi-host': 'v3.football.api-sports.io',
-            'x-rapidapi-key': 'XxXxXxXxXxXxXxXxXxXxXxXx'
+const token = process.env.SPORT_MONK_TOKEN;
+const api = process.env.SPORT_MONK_URL;
+async function playersData(teamId) {
+    try {
+        var players = [];
+        var squads;
+        //24 gk 25 defender 26 is midfielder 27 is forw
+        const squadUrl = `${api}/squads/teams/${teamId}?api_token=${token}`;
+        const squadPromise = new Promise((resolve, reject) => {
+            unirest('GET', squadUrl).end(function (res) {
+                if (res.error) throw new Error(res.error);
+                res = JSON.parse(res.raw_body);
+                squads = res.data;
+                resolve();
+            });
+        });
+        await squadPromise;
+        //console.log(squads)
+        for (i = 0; i < squads.length; i++) {
+            let playerUrl = `${api}/players/${squads[i].player_id}?api_token=${token}`;
+            let playerPromise = new Promise((resolve, reject) => {
+                unirest('GET', playerUrl).end(function (res) {
+                    if (res.error) throw new Error(res.error);
+                    res = JSON.parse(res.raw_body);
+                    players[i] = res.data;
+                    resolve();
+                });
+            });
+            await playerPromise;
         }
-    };
-
-    request(options, function (error, response, body) {
-        if (error) throw new Error(error);
-        console.log(body);
-        players = body;
-    });
-    return players;
+        return players;
+    } catch (error) {
+        console.log('catchedddd');
+        console.log(error.message);
+    }
 }
 
-const gk = async (req, res) => {
+const showPlayers = async (req, res) => {
     try {
-        const gk1 = [],
-            gk2 = [],
-            gkSub1 = [],
-            gkSub2 = [];
-        const { matchId } = req.body;
-        const data = playersData(matchId);
-        const team1 = data.response.team[0].startXI;
-        const team2 = data.response.team[1].startXI;
-        const substi1 = data.response.team[0].substitutes;
-        const substi2 = data.response.team[1].substitutes;
-        for (i = 0; i < team1.players.size; i++) {
-            if (team1.players[i].pos === 'G') gk1[i] = team1.players[i].name;
-            if (team2.players[i].pos === 'G') gk2[i] = team2.players[i];
-        }
-        for (i = 0; i < substi1.players.size; i++) {
-            if (substi1.players[i].pos === 'G') gkSub1[i] = substi1.players[i];
-        }
-        for (i = 0; i < substi2.players.size; i++) {
-            if (substi2.players[i].pos === 'G') gkSub2[i] = substi2.players[i];
-        }
-        res.status(200).json({ gk1, gk2, gkSub1, gkSub2 });
-    } catch (error) {
-        return res.status(400).json({ message: error.message });
-    }
-};
-
-const def = async (req, res) => {
-    try {
-        const def1 = [],
-            def2 = [],
-            defSub1 = [],
-            defSub2 = [];
-        const { matchId } = req.body;
-        const data = playersData(matchId);
-        const team1 = data.response.team[0].startXI;
-        const team2 = data.response.team[1].startXI;
-        const substi1 = data.response.team[0].substitutes;
-        const substi2 = data.response.team[1].substitutes;
-        for (i = 0; i < team1.players.size; i++) {
-            if (team1.players[i].pos === 'D') def1[i] = team1.players[i];
-            if (team2.players[i].pos === 'D') def2[i] = team2.players[i];
-        }
-        for (i = 0; i < substi1.players.size; i++) {
-            if (substi1.players[i].pos === 'D') defSub1[i] = substi1.players[i];
-        }
-        for (i = 0; i < substi2.players.size; i++) {
-            if (substi2.players[i].pos === 'D') defSub2[i] = substi2.players[i];
-        }
-        res.status(200).json({ def1, def2, defSub1, defSub2 });
-    } catch (error) {
-        return res.status(400).json({ message: error.message });
-    }
-};
-
-const mid = async (req, res) => {
-    try {
-        const mid1 = [],
-            mid2 = [],
-            midSub1 = [],
-            midSub2 = [];
-        const { matchId } = req.body;
-        const data = playersData(matchId);
-        const team1 = data.response.team[0].startXI;
-        const team2 = data.response.team[1].startXI;
-        const substi1 = data.response.team[0].substitutes;
-        const substi2 = data.response.team[1].substitutes;
-        for (i = 0; i < team1.players.size; i++) {
-            if (team1.players[i].pos === 'M') mid1[i] = team1.players[i];
-            if (team2.players[i].pos === 'M') mid2[i] = team2.players[i];
-        }
-        for (i = 0; i < substi1.players.size; i++) {
-            if (substi1.players[i].pos === 'M') midSub1[i] = substi1.players[i];
-        }
-        for (i = 0; i < substi2.players.size; i++) {
-            if (substi2.players[i].pos === 'M') midSub2[i] = substi2.players[i];
-        }
-        res.status(200).json({ mid1, mid2, midSub1, midSub2 });
-    } catch (error) {
-        return res.status(400).json({ message: error.message });
-    }
-};
-
-const forw = async (req, res) => {
-    try {
-        const forw1 = [],
-            forw2 = [],
-            forwSub1 = [],
-            forwSub2 = [];
-        const { matchId } = req.body;
-        const data = playersData(matchId);
-        const team1 = data.response.team[0].startXI;
-        const team2 = data.response.team[1].startXI;
-        const substi1 = data.response.team[0].substitutes;
-        const substi2 = data.response.team[1].substitutes;
-        for (i = 0; i < team1.players.size; i++) {
-            if (team1.players[i].pos === 'F') forw1[i] = team1.players[i];
-            if (team2.players[i].pos === 'F') forw2[i] = team2.players[i];
-        }
-        for (i = 0; i < substi1.players.size; i++) {
-            if (substi1.players[i].pos === 'F')
-                forwSub1[i] = substi1.players[i];
-        }
-        for (i = 0; i < substi2.players.size; i++) {
-            if (substi2.players[i].pos === 'F')
-                forwSub2[i] = substi2.players[i];
-        }
-        res.status(200).json({ forw1, forw2, forwSub1, forwSub2 });
+        const { teamId1, teamId2 } = req.body;
+        const data1 = await playersData(teamId1);
+        const data2 = await playersData(teamId2);
+        res.status(200).json({ data1, data2 });
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
@@ -146,38 +61,35 @@ const teamSelect = async (req, res) => {
     try {
         const {
             matchId,
-            matchDate,
-            players: [{ name, number, pos }],
+            players: [{ name, pos }],
             cap,
             vc
         } = req.body;
-        const currentTime = new Date().getTime();
-        const matchTime = matchDate.getTime();
-        if (matchTime > currentTime) {
-            const team = new Team({ user: userData._id, match: matchId });
-            for (i = 0, j = 0, k = 0, l = 0; i < req.body.players.size; i++) {
-                if (req.body.players[i].pos === 'G')
-                    team.gk = req.body.players[i].name;
-                if (req.body.players[i].pos === 'D') {
-                    team.def[j].player = req.body.players[i].name;
-                    j++;
-                }
-                if (req.body.players[i].pos === 'M') {
-                    team.mid[k].player = req.body.players[i].name;
-                    k++;
-                }
-                if (req.body.players[i].pos === 'F') {
-                    team.forw[l].player = req.body.players[i].name;
-                    l++;
-                }
+        const team = new Team({ user: userData._id, match: matchId });
+        for (i = 0, j = 0, k = 0, l = 0; i < req.body.players.length; i++) {
+            if (req.body.players[i].pos === 24) {
+                team.gk = req.body.players[i].name;
             }
-            team.cap = cap;
-            team.vc = vc;
-            await team.save;
-            res.status(200).json({ team });
-        } else {
-            res.status(400).json({ message: 'Deadline passed' });
+            if (req.body.players[i].pos === 25) {
+                team.def = team.def.concat({
+                    player: req.body.players[i].name
+                });
+            }
+            if (req.body.players[i].pos === 26) {
+                team.mid = team.mid.concat({
+                    player: req.body.players[i].name
+                });
+            }
+            if (req.body.players[i].pos === 27) {
+                team.forw = team.forw.concat({
+                    player: req.body.players[i].name
+                });
+            }
         }
+        team.captain = cap;
+        team.vc = vc;
+        await team.save;
+        res.status(200).json({ team });
     } catch (error) {
         return res.status(400).json({ message: error.message });
     }
@@ -194,10 +106,7 @@ const teamDisp = async (req, res) => {
 };
 
 module.exports = {
-    gk,
-    def,
-    mid,
-    forw,
+    showPlayers,
     teamSelect,
     teamDisp
 };

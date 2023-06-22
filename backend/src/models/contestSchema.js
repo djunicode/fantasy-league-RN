@@ -38,8 +38,8 @@ const contestSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Match'
         },
-        code:{
-            type : String,
+        code: {
+            type: String
         }
     },
     { timestamps: true }
@@ -47,7 +47,10 @@ const contestSchema = new mongoose.Schema(
 
 const Contest = mongoose.model('Contest', contestSchema);
 
+
 module.exports = {Contest};
 
 module.exports = Contest;
+
+module.exports = { Contest };
 

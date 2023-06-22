@@ -229,3 +229,527 @@ paths:
                 default : "password updated"
         400 :
           description : error in updating password
+  #searched users
+  /user/searchedUsers :
+    post :
+      summary : give result of users on the basis of search criteria
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              search :
+                type : string
+                default : "test"
+      responses :
+        200 :
+          description : searched users
+          schema :
+            type : array
+            items :
+              type : object
+              properties :
+                _id : 
+                  type : string
+                  default : "6413ed8100c830396d438ce2"
+                username : 
+                  type : string
+                  default: "testUser"
+                email :
+                  type : string
+                  default : "testuser@gmail.com"
+                password :
+                  type : string
+                  default : "$2b$09$2E0zVqrt699Zrw8r7LzoROCQG3dEH8f97556ayWNktAksEpOWoNba"
+                mobile :
+                  type : number
+                  default : 9187263504
+        400 :
+          description : error in searching users
+  #access or create chat
+  /chat/accessChat :
+    post :
+        summary : acceses or creates chat with given userId
+        security :
+          - Bearer : []
+        parameters :
+          - in : body
+            schema :
+              type : object
+              properties :
+                userId :
+                  type : string
+                  default : "6408c677da9ad762aac512f3"
+        responses :
+          200 :
+            description : chat
+            schema :
+              type : object
+              properties :
+                fullChat:
+                  type : object
+                  properties:
+                    _id :
+                      type : string
+                      default : "644f61149f2b38292f649635"
+                    users : 
+                      type : array
+                      items :
+                        type : object
+                        properties :
+                          _id :
+                            type: string
+                            default : "6408c64dde08732451928e83"
+                          username :
+                            type : string
+                            default : "devansh"
+                          email :
+                            type : string
+                            default : "xyz@gmail.com"
+                          mobile :
+                            type : number
+                            default : 9819778389
+          400 :
+            description : error in accessing chat
+  #fetch chat
+  /chat/fetchChats :
+    get :
+      summary : fetches user chats
+      security :
+        - Bearer : []
+      responses :
+        200 :
+          description : results
+          schema :
+            type : array
+            items :
+              type : object
+              properties :
+                _id :
+                  type : string
+                  default : "644f61149f2b38292f649635"
+                users : 
+                  type : array
+                  items :
+                    type : object
+                    properties: 
+                      _id :
+                        type: string
+                        default : "6408c64dde08732451928e83"
+                      username :
+                        type : string
+                        default : "devansh"
+                      email :
+                        type : string
+                        default : "xyz@gmail.com"
+                      mobile :
+                        type : number
+                        default : 9819778389
+        400 :
+          description : error in fetching chats
+  #send message
+  /message/sendMessage :
+    post :
+      summary : sends message
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              chatId :
+                type : string
+                default : "644f61149f2b38292f649635"
+              content :
+                type : string
+                default : "hello world"
+      responses :
+        200 :
+          description : message sent succesfully
+          schema :
+            type : object
+            properties :
+              message :
+                type : object
+                properties :
+                  sender :
+                    type: object
+                    properties :
+                      _id:
+                        type: string
+                        default : "6408c64dde08732451928e83"
+                      username :
+                        type: string
+                        default : "devansh"
+                  chat :
+                    type: object
+                    properties :
+                      _id :
+                        type : string
+                        default : "644f61149f2b38292f649635"
+                      users :
+                        type : array
+                        items :
+                          type : object
+                          properties :
+                            _id :
+                              type: string
+                              default : "6408c64dde08732451928e83"
+                            username :
+                              type : string
+                              default : "devansh"
+                            email :
+                              type : string
+                              default : "xyz@gmail.com"
+                  _id :
+                    type: string
+                    default : "644f6eb451b9596c21c27d43"
+        400 :
+          description: error in sending message
+  #all messages
+  /message/allMessages:
+    post :
+      summary : sends message
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              chatId :
+                type : string
+                default : "644f61149f2b38292f649635"
+      responses :
+        200 :
+          description: all messages
+          schema:
+            type : object
+            properties :
+              messages :
+                type : array
+                items :
+                  type: object
+                  properties :
+                    _id :
+                      type: string
+                      default : "644f6eb451b9596c21c27d43"
+                    sender :
+                      type : object
+                      properties :
+                        _id :
+                          type: string
+                          default : "6408c64dde08732451928e83"
+                        username :
+                          type : string
+                          default : "devansh"
+                        email :
+                          type : string
+                          default : "xyz@gmail.com"
+                    chat :
+                      type : object
+                      properties :
+                        _id :
+                          type: string
+                          default: "644f61149f2b38292f649635"
+                        users: 
+                          type: array
+                          items :
+                            type : string
+                        latestMsg:
+                          type: string
+        400 :
+          description : error 
+  #show players
+  /team/showPlayers:
+    post:
+      summary: displays players for team selection 
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              teamId1:
+                type: string
+                default: 62
+              teamId2:
+                type: string
+                default: 62
+      responses :
+        200:
+          description: available players from both teams
+          schema:
+            type: object
+            properties:
+              data1:
+                type: array
+                items : 
+                  type: object
+                  properties: 
+                    id:
+                      type: Number
+                      default: 23277869
+                    sport_id:
+                      type: Number
+                      default : 1
+                    country_id:
+                      type: Number
+                      default: 11
+                    nationality_id:
+                      type: Number
+                      default: 11
+                    city_id :
+                      type: Number
+                      default: null
+                    position_id:
+                      type: Number
+                      default: 26
+                    detailed_position_id:
+                      type: Number
+                      default: 26
+                    type_id:
+                      type: Number
+                      default: 26
+                    common_name:
+                      type: string
+                      default: "M.Tillman"
+                    firstname:
+                      type: string
+                      default: "Malik"
+                    lastname:
+                      type: string
+                      default: "Tillman"
+                    name:
+                      type: string
+                      default: "Malik Tillman"
+                    display_name:
+                      type: string
+                      default: "Malik Tillman"
+                    image_path:
+                      type: string
+                      default: "https://cdn.sportmonks.com/images/soccer/players/13/23277869.png"
+                    height:
+                      type: Number
+                      default: 187
+                    weight:
+                      type: Number
+                      default: null
+                    date_of_birth:
+                      type: string
+                      default: "2002-05-28"
+                    gender:
+                      type: string
+                      default: "male"
+              data2:
+                type: array
+                items : 
+                  type: object
+                  properties: 
+                    id:
+                      type: Number
+                      default: 23277869
+                    sport_id:
+                      type: Number
+                      default : 1
+                    country_id:
+                      type: Number
+                      default: 11
+                    nationality_id:
+                      type: Number
+                      default: 11
+                    city_id :
+                      type: Number
+                      default: null
+                    position_id:
+                      type: Number
+                      default: 26
+                    detailed_position_id:
+                      type: Number
+                      default: 26
+                    type_id:
+                      type: Number
+                      default: 26
+                    common_name:
+                      type: string
+                      default: "M.Tillman"
+                    firstname:
+                      type: string
+                      default: "Malik"
+                    lastname:
+                      type: string
+                      default: "Tillman"
+                    name:
+                      type: string
+                      default: "Malik Tillman"
+                    display_name:
+                      type: string
+                      default: "Malik Tillman"
+                    image_path:
+                      type: string
+                      default: "https://cdn.sportmonks.com/images/soccer/players/13/23277869.png"
+                    height:
+                      type: Number
+                      default: 187
+                    weight:
+                      type: Number
+                      default: null
+                    date_of_birth:
+                      type: string
+                      default: "2002-05-28"
+                    gender:
+                      type: string
+                      default: "male"       
+        400:
+          description : error
+  #select team
+  /team/teamSelect:
+    post:
+      summary: displays players for team selection 
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              matchId:
+                type: string
+                default: "682916803826711"
+              players:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      default: "abcd"
+                    pos:
+                      type: string
+                      default: 24
+              cap:
+                type: string
+                default: "abcd"
+              vc:
+                type: string
+                default: "any selected player except cap"
+      responses:
+        200:
+          description: team selected successfully
+          schema:
+            type: object
+            properties:
+              team:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    default: "649298921c715b6794ecf4e8"
+                  def:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        player: 
+                          type: string
+                          default: "dfg"
+                  mid:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        player: 
+                          type: string
+                          default: "jkl"
+                  forw:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        player: 
+                          type: string
+                          default: "fex"    
+                  gk:
+                    type: string
+                    default: "abcd"
+                  captain:
+                    type: string
+                    default: "abcd"
+                  vc:
+                    type: string
+                    default: "fex"
+                  matchId:
+                    type: string
+                    default: "682916803826711"
+        400:
+          description: error
+  #display team
+  /team/teamDisp:
+    post: 
+      summary: displays selected team according to match   
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              matchId:
+                type: string
+                default: "682916803826711"
+      responses:
+        200:
+          description: teams selected
+          schema:
+            type: object
+            properties:
+              team:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      default: "649298921c715b6794ecf4e8"
+                    def:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          player: 
+                            type: string
+                            default: "dfg"
+                    mid:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          player: 
+                            type: string
+                            default: "jkl"
+                    forw:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          player: 
+                            type: string
+                            default: "fex"    
+                    gk:
+                      type: string
+                      default: "abcd"
+                    captain:
+                      type: string
+                      default: "abcd"
+                    vc:
+                      type: string
+                      default: "fex"
+                    matchId:
+                      type: string
+                      default: "682916803826711"
+        400:
+          description: error       

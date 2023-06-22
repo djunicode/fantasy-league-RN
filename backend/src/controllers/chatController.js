@@ -13,8 +13,8 @@ const accessChat = async (req, res) => {
         }
         var isChat = await Chat.find({
             $and: [
-                { $users: { $elemmatch: { $eq: userData._id } } },
-                { $users: { $elemmatch: { $eq: userId } } }
+                { users: { $elemMatch: { $eq: userData._id } } },
+                { users: { $elemMatch: { $eq: userId } } }
             ]
         })
             .populate('users', '-password')
@@ -26,7 +26,6 @@ const accessChat = async (req, res) => {
         if (isChat.length > 0) res.status(200).json(isChat[0]);
         else {
             var chatData = {
-                chatName: 'sender',
                 users: [userData._id, userId]
             };
         }

@@ -462,4 +462,294 @@ paths:
                         latestMsg:
                           type: string
         400 :
-          description : error                
+          description : error 
+  #show players
+  /team/showPlayers:
+    post:
+      summary: displays players for team selection 
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              teamId1:
+                type: string
+                default: 62
+              teamId2:
+                type: string
+                default: 62
+      responses :
+        200:
+          description: available players from both teams
+          schema:
+            type: object
+            properties:
+              data1:
+                type: array
+                items : 
+                  type: object
+                  properties: 
+                    id:
+                      type: Number
+                      default: 23277869
+                    sport_id:
+                      type: Number
+                      default : 1
+                    country_id:
+                      type: Number
+                      default: 11
+                    nationality_id:
+                      type: Number
+                      default: 11
+                    city_id :
+                      type: Number
+                      default: null
+                    position_id:
+                      type: Number
+                      default: 26
+                    detailed_position_id:
+                      type: Number
+                      default: 26
+                    type_id:
+                      type: Number
+                      default: 26
+                    common_name:
+                      type: string
+                      default: "M.Tillman"
+                    firstname:
+                      type: string
+                      default: "Malik"
+                    lastname:
+                      type: string
+                      default: "Tillman"
+                    name:
+                      type: string
+                      default: "Malik Tillman"
+                    display_name:
+                      type: string
+                      default: "Malik Tillman"
+                    image_path:
+                      type: string
+                      default: "https://cdn.sportmonks.com/images/soccer/players/13/23277869.png"
+                    height:
+                      type: Number
+                      default: 187
+                    weight:
+                      type: Number
+                      default: null
+                    date_of_birth:
+                      type: string
+                      default: "2002-05-28"
+                    gender:
+                      type: string
+                      default: "male"
+              data2:
+                type: array
+                items : 
+                  type: object
+                  properties: 
+                    id:
+                      type: Number
+                      default: 23277869
+                    sport_id:
+                      type: Number
+                      default : 1
+                    country_id:
+                      type: Number
+                      default: 11
+                    nationality_id:
+                      type: Number
+                      default: 11
+                    city_id :
+                      type: Number
+                      default: null
+                    position_id:
+                      type: Number
+                      default: 26
+                    detailed_position_id:
+                      type: Number
+                      default: 26
+                    type_id:
+                      type: Number
+                      default: 26
+                    common_name:
+                      type: string
+                      default: "M.Tillman"
+                    firstname:
+                      type: string
+                      default: "Malik"
+                    lastname:
+                      type: string
+                      default: "Tillman"
+                    name:
+                      type: string
+                      default: "Malik Tillman"
+                    display_name:
+                      type: string
+                      default: "Malik Tillman"
+                    image_path:
+                      type: string
+                      default: "https://cdn.sportmonks.com/images/soccer/players/13/23277869.png"
+                    height:
+                      type: Number
+                      default: 187
+                    weight:
+                      type: Number
+                      default: null
+                    date_of_birth:
+                      type: string
+                      default: "2002-05-28"
+                    gender:
+                      type: string
+                      default: "male"       
+        400:
+          description : error
+  #select team
+  /team/teamSelect:
+    post:
+      summary: displays players for team selection 
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              matchId:
+                type: string
+                default: "682916803826711"
+              players:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      default: "abcd"
+                    pos:
+                      type: string
+                      default: 24
+              cap:
+                type: string
+                default: "abcd"
+              vc:
+                type: string
+                default: "any selected player except cap"
+      responses:
+        200:
+          description: team selected successfully
+          schema:
+            type: object
+            properties:
+              team:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    default: "649298921c715b6794ecf4e8"
+                  def:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        player: 
+                          type: string
+                          default: "dfg"
+                  mid:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        player: 
+                          type: string
+                          default: "jkl"
+                  forw:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        player: 
+                          type: string
+                          default: "fex"    
+                  gk:
+                    type: string
+                    default: "abcd"
+                  captain:
+                    type: string
+                    default: "abcd"
+                  vc:
+                    type: string
+                    default: "fex"
+                  matchId:
+                    type: string
+                    default: "682916803826711"
+        400:
+          description: error
+  #display team
+  /team/teamDisp:
+    post: 
+      summary: displays selected team according to match   
+      security :
+        - Bearer : []
+      parameters :
+        - in : body
+          schema :
+            type : object
+            properties :
+              matchId:
+                type: string
+                default: "682916803826711"
+      responses:
+        200:
+          description: teams selected
+          schema:
+            type: object
+            properties:
+              team:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      default: "649298921c715b6794ecf4e8"
+                    def:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          player: 
+                            type: string
+                            default: "dfg"
+                    mid:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          player: 
+                            type: string
+                            default: "jkl"
+                    forw:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          player: 
+                            type: string
+                            default: "fex"    
+                    gk:
+                      type: string
+                      default: "abcd"
+                    captain:
+                      type: string
+                      default: "abcd"
+                    vc:
+                      type: string
+                      default: "fex"
+                    matchId:
+                      type: string
+                      default: "682916803826711"
+        400:
+          description: error       

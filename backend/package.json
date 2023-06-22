@@ -32,6 +32,7 @@
         "request": "^2.88.2",
         "socket.io": "^4.6.1",
         "swagger-ui-express": "^4.6.2",
+        "unirest": "^0.6.0",
         "validator": "^13.9.0",
         "yamljs": "^0.3.0"
     },

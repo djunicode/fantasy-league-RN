@@ -12,10 +12,10 @@ const accessChat = async (req, res) => {
             return res.status(400).json({ message: 'User not found' });
         }
         var isChat = await Chat.find({
-             $and:[
+            $and: [
                 { users: { $elemMatch: { $eq: userData._id } } },
                 { users: { $elemMatch: { $eq: userId } } }
-             ]
+            ]
         })
             .populate('users', '-password')
             .populate('latestMsg');

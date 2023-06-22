@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const cron = require('node-cron');
 const app = express();
-const dotenv = require('dotenv').config({ path: 'src/.env' });
+const dotenv = require('dotenv').config();
 PORT = process.env.PORT;
 
 //importing routes
@@ -11,6 +11,7 @@ const user = require('./routes/userRoutes');
 const team = require('./routes/teamRoutes');
 const chat = require('./routes/chatRoutes');
 const message = require('./routes/messageRoutes');
+const match = require('./routes/matchRoutes');
 
 //connection to database
 cron.schedule('* * * * * *', function () {
@@ -35,6 +36,7 @@ app.use('/user', user);
 app.use('/team', team);
 app.use('/message', message);
 app.use('/chat', chat);
+app.use('/match',match);
 
 //error handling for no route found
 app.use((req, res, next) => {

@@ -15,7 +15,7 @@ const fixtures = async(req,res)=>{
     const options = {
         method: 'GET'
     }
-    const name={};
+    const name=[{}];
     fetch(Url,options)
     .then(res=>res.json())
     .then(json => {
@@ -24,7 +24,7 @@ const fixtures = async(req,res)=>{
         {
             name[i]=json.data[i].name;
         }
-        res.status(200).json(name);
+        res.status(200).json({match:name});
     })
     .catch(err => console.error('error:'+err));
 }
@@ -45,11 +45,11 @@ const topScorer = async(req,res)=>{
          .then(res=>res.json())
          .then(json1=>{
             console.log(json1)
-            const response = {
+            const response = [{
                 name:json1.data.name,
                 imageUrl:json1.data.image_path
-            }
-            res.status(200).json(response);
+            }]
+            res.status(200).json({match:response});
          })
      })
 }

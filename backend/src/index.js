@@ -28,7 +28,7 @@ app.use(morgan('dev'));
 //swagger
 const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerJSDocs = YAML.load('./api.yaml');
+const swaggerJSDocs = YAML.load('../api.yaml');
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJSDocs));
 
 //assigning routes

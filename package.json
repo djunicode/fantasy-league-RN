@@ -1,0 +1,37 @@
+{
+  "name": "fantasy-league-rn",
+  "version": "1.0.0",
+  "description": "React Native App + Express.js Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seon-pegado/fantasy-league-RN.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seon-pegado/fantasy-league-RN/issues"
+  },
+  "homepage": "https://github.com/seon-pegado/fantasy-league-RN#readme",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.3.1",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.9.3",
+    "request": "^2.88.2",
+    "socket-io": "^1.0.0",
+    "socket.io": "^4.7.0",
+    "swagger-ui-express": "^4.6.3",
+    "validator": "^13.9.0",
+    "yamljs": "^0.3.0"
+  }
+}

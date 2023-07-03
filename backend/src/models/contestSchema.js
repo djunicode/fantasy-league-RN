@@ -32,7 +32,8 @@ const contestSchema = new mongoose.Schema(
             required: true
         },
         winningPrice: {
-            type: Number
+            type: Number,
+            default : 0
         },
         match: {
             type: mongoose.Schema.Types.ObjectId,
@@ -46,4 +47,4 @@ const contestSchema = new mongoose.Schema(
 );
 
 const Contest = mongoose.model('Contest', contestSchema);
-module.exports = {Contest};
+module.exports = Contest;

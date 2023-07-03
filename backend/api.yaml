@@ -229,3 +229,153 @@ paths:
                 default : "password updated"
         400 :
           description : error in updating password
+  #creation of contest
+  /contest/create :
+    post :
+      summary : create a new contest
+      security : 
+        - Bearer : []
+      parameters : 
+        - in : body
+          schema :
+            type : object
+            properties :
+              spots :
+                type : number
+                default : 100
+              typeOfContest:
+                type : string
+                default : public
+              paidFree: 
+                type: string
+                default: free
+              noOfTeams:
+                type: number
+                default: 100
+              pricePerTeam:
+                type: number
+                default: 0
+              winningPrice:
+                type: number
+                default: 0      
+      responses :
+        200 :
+          description : Contest successfully created
+          schema :
+            type : object
+            properties : 
+              message :
+                type : string
+                default : "contest Created"
+        400 : 
+          description: Error in creating a new contest
+  #get private contest
+  /contest/private:
+    get :
+      summary : gives the data of private contest
+      security : 
+        - Bearer : []
+      parameters : 
+      description : only registered users    
+      responses :
+        200 :
+          description: Succesful response 
+              
+        400 : 
+          description: Error in getting private contest
+  #get all contest
+  /contest/all:
+    get :
+      summary : gives the data of private contest
+      security : 
+        - Bearer : []
+      parameters : 
+      description: only registered users   
+      responses :
+        200 :
+          description : Successful response
+          
+              
+        400 : 
+          description: Error in getting all contest
+  #delete contest
+  /contest/delete:
+    delete:
+      summary: Deleting a contest
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                default: '00000'
+      responses:
+        200:
+          description: Success, the contest has been deleted
+        400:
+          description: Unable to delete the contest
+  #update a contest
+  /contest/change:
+    put:
+        summary: Updating the data in contest
+        produces:
+          - application/json
+        consumes:
+          - application/json
+        parameters:
+          - in: body
+            schema:
+              type: object
+              properties:
+                _id: 
+                type: string
+                default: '00000'
+        responses:
+          200:
+            description: Suucess, the data of contest has been updated
+          400:
+            description: Unable to update the data
+  #add user to th contest
+  /contest/add:
+    put:
+      summary: joining a user to the contest
+      parameters:
+        - in: body
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                default: '0000000'
+        responses: 
+          200:
+            description: you have joined the contest successfully
+          400:
+            description: error occured whilr joining the contest
+  #remove user
+  /contest/remove:
+    put:
+      summary: remove the user from the contest
+      parameters:
+        - in: body
+          schema:
+            type: object
+            properties:
+              _id:
+                type: string
+                default: '00000000000'
+      responses:
+        200:
+          description: removed the user successfully
+        400:
+          description: error ocurred while removing the user
+
+
+    
+        
+     

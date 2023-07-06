@@ -1,122 +1,138 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'
-const ChatScreen = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
+import { View, TextInput, Button, FlatList } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
-  const sendMessage = () => {
-    if (inputText !== '') {
-      setMessages([...messages, {sender: 'Me', message: inputText}]);
-      setInputText('');
+const ChatScreen = () => {
+  const [searchText, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [chats, setChats] = useState([]);
+  const [messageInput, setMessageInput] = useState('');
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    getTokenFromStorage();
+  }, []);
+
+  const getTokenFromStorage = async () => {
+    try {
+      const storedToken = await AsyncStorage.getItem('token');
+      setToken(storedToken);
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  useEffect(() => {
-    // An example of loading messages from a database or API
-    const loadedMessages = [
-      {sender: 'John', message: 'Hey, how are you?'},
-      {sender: 'Me', message: 'I\'m good, thanks for asking.'},
-      {sender: 'Sarah', message: 'Not much, just hanging out at home.'},
-      {sender: 'Tom', message: 'Sorry, I can\'t make it today.'},
-      {sender: 'Me', message: 'No problem, we can reschedule for next week.'},
-    ];
-    setMessages(loadedMessages);
-  }, []);
+  const handleSearch = async () => {
+    try {
+      const response = await axios.post(
+        'http://fantasyleague-pl7o.onrender.com/user/searchedUsers',
+        { query: searchText },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const renderItem = ({ item }) => {
-    const isSender = item.sender === 'Me';
-    const messageStyle = isSender ? styles.senderMessage : styles.recipientMessage;
-    const textStyle = isSender ? styles.senderText : styles.recipientText;
-    const alignStyle = isSender ? { alignSelf: 'flex-end' } : { alignSelf: 'flex-start' };
-    return (
-      <View style={[styles.message, messageStyle, alignStyle]}>
-        <Text style={[styles.messageText, textStyle]}>{item.message}</Text>
-      </View>
-    );
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
+    accessChat(user.id);
+  };
+
+  const accessChat = async (_id) => {
+    try {
+      const response = await axios.get(
+        `http://fantasyleague-pl7o.onrender.com/chat/accessChat?userId=${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setChats(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchChats = async () => {
+    try {
+      const response = await axios.get(
+        'http://fantasyleague-pl7o.onrender.com/chat/fetchChats',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setChats(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const sendMessage = async () => {
+    try {
+      const response = await axios.post(
+        'http://fantasyleague-pl7o.onrender.com/message/sendMessage',
+        {
+          recipientId: selectedUser.id,
+          message: messageInput,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      console.log('Message sent:', response.data);
+      setMessageInput('');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={messages}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+    <View>
+      {/* Search bar */}
+      <TextInput
+        placeholder="Search by username or email"
+        value={searchText}
+        onChangeText={setSearchText}
       />
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Type a message"
-          value={inputText}
-          onChangeText={(text) => setInputText(text)}
+      <Button title="Search" onPress={handleSearch} />
+
+      {/* Display search results */}
+      {searchResults.length > 0 && (
+        <FlatList
+          data={searchResults}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <Button
+              title={item.username}
+              onPress={() => handleUserClick(item)}
+            />
+          )}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-              <Icon 
-                name="send"
-                size={24}
-                color="blue"
-              />
-        </TouchableOpacity>
-      </View>
+      )}
+
+      {/* Display chat messages */}
+      {selectedUser && (
+        <FlatList
+          data={chats}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View>
+              <Text>{item.message}</Text>
+              <Text>{item.timestamp}</Text>
+            </View>)}
+        />
+      )}
+
+      {/* Message input and send button */}
+      {selectedUser && (
+        <View>
+          <TextInput
+            placeholder="Type a message..."
+            value={messageInput}
+            onChangeText={setMessageInput}
+          />
+          <Button title="Send" onPress={sendMessage} />
+        </View>
+      )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    padding: 10,
-  },
-  message: {
-    backgroundColor: '#f2f2f2',
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 5,
-    maxWidth: '80%',
-  },
-  senderMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#007aff',
-  },
-  recipientMessage: {
-    alignSelf: 'flex-start',
-  },
-  messageText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  senderText: {
-    color: '#fff',
-  },
-  recipientText: {
-    color: '#000',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 25,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginVertical: 10,
-  },
-  input: {
-    flex: 1,
-    fontSize: 16,
-    marginRight: 10,
-  },
-  sendButton: {
-    backgroundColor: '#f2f2f2',
-    borderRadius: 25,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-  },
-  sendButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default ChatScreen;

@@ -9,6 +9,8 @@ import HomeScreen from './HomeScreen'
 import Otpverification from './Otpverification';
 import HomePage from './HomePage';
 import ChatScreen from './ChatScreen';
+import FootballField from './FootballField';
+import TeamPlayersScreen from './TeamPlayersScreen';
 import {
   StyleSheet,
 } from 'react-native';

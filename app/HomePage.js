@@ -9,6 +9,8 @@ import Icon3 from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './HomeScreen';
 import ChatScreen from './ChatScreen';
+import TeamPlayersScreen from './TeamPlayersScreen';
+import FootballField from './FootballField';
 
 const Tab = createBottomTabNavigator();
 const HomePage = () => {
@@ -51,7 +53,7 @@ function MyTabs() {
         />
         <Tab.Screen
           name="C"
-          component={HomeScreen}
+          component={FootballField}
           options={{
             tabBarLabel: 'Awards',
             tabBarIcon: ({ color, size }) => (
@@ -71,7 +73,7 @@ function MyTabs() {
         />
         <Tab.Screen
           name="E"
-          component={HomeScreen}
+          component={TeamPlayersScreen}
           options={{
             tabBarLabel: 'Profile',
             tabBarIcon: ({ color, size }) => (

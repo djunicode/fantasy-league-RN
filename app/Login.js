@@ -1,8 +1,9 @@
-import { Dimensions, Image, StyleSheet, Text, View, TextInput, TouchableOpacity, Button } from 'react-native'
-import Splash from './Splash'
-import React, { useState, useEffect } from 'react'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { Dimensions, Image, StyleSheet, Text, View, TextInput, TouchableOpacity, Button } from 'react-native';
+import Splash from './Splash';
+import React, { useState, useEffect } from 'react';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const Login = () => {
@@ -16,110 +17,90 @@ const Login = () => {
   const [passwordValidError, setPasswordValidError] = useState('');
   const [passwordverified, setPasswordVerified] = useState(false);
   const [error, setError] = useState({ field: '', message: '' });
+
   const toggleSecureEntry = () => {
     setIsSecure(!isSecure);
   };
 
   const onLoginPressed = () => {
-
     axios.post('http://fantasyleague-pl7o.onrender.com/user/userLogin', { email, password })
       .then(response => {
-        // Handle successful login response
-        console.log(response.data);
-        // Navigate to home page or perform any other action
-        let signinerror = {field:'', message: ''};
+        const authToken = response.data.token; 
+        AsyncStorage.setItem('authToken', authToken); 
 
-      if(email==='' && password==='')
-        {
-          alert("Both fields are blank")
-        }
-      
-         else if (email==='') {
-            alert("Email field cannot be blank")
-        }
-        else if (password===''){
-            alert("Password field cannot be blank")
-          }
-          else if(emailverified===false)
-          {
-            alert("Wrong email format");
-          }
-          // else if(passwordverified===false)
-          // {
-          //   alert("Wrong password format");
-          // }
-        else {
-            setError({field:'',message:''});
-            navigation.navigate("HomePage");
+        let signinerror = { field: '', message: '' };
+
+        if (email === '' && password === '') {
+          alert("Both fields are blank");
+        } else if (email === '') {
+          alert("Email field cannot be blank");
+        } else if (password === '') {
+          alert("Password field cannot be blank");
+        } else if (emailverified === false) {
+          alert("Wrong email format");
+        } else {
+          setError({ field: '', message: '' });
+          navigation.navigate("HomePage");
         }
       })
       .catch(error => {
-        // Handle error response
         console.error(error);
-        // Show error message to the user or perform any other action
       });
-  }
+  };
 
   const onSignup = () => {
-    navigation.navigate("Signup")
-  }
+    navigation.navigate("Signup");
+  };
 
   const onGooglepress = () => {
-    console.warn('Sign in with Google')
-  }
+    console.warn('Sign in with Google');
+  };
 
   const onFacebookpress = () => {
-    console.warn('Sign in with Facebook')
-  }
+    console.warn('Sign in with Facebook');
+  };
 
   const onForgotpasswordpressed = () => {
-    navigation.navigate("Forgot")
-  }
-
+    navigation.navigate("Forgot");
+  };
 
   const handleValidEmail = val => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     if (val.length === 0) {
       setEmailValidError('');
-      setEmailVerified(false)
+      setEmailVerified(false);
     } else if (reg.test(val) === false) {
-
-      setEmailValidError('Enter valid email address');
-      setEmailVerified(false)
+      setEmailValidError('Enter a valid email address');
+      setEmailVerified(false);
     } else if (reg.test(val) === true) {
       setEmailValidError('');
       setEmailVerified(true);
-
     }
   };
 
-  // const handleValidPassword = val => {
-  //   let reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/;
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authToken = await AsyncStorage.getItem('authToken');
+      if (authToken) {
+        navigation.navigate("HomePage");
+      } else {
+        setIsLoading(false);
+      }
+    };
 
-  //   if (val.length === 0) {
-  //     setPasswordValidError('');
-  //     setPasswordVerified(false)
-  //   } else if (reg.test(val) === false) {
-  //     setPasswordValidError('A password should contain a capital letter, a number, a special character and a minimum length of 8');
-  //     setPasswordVerified(false)
-  //   } else if (reg.test(val) === true) {
-  //     setPasswordValidError('');
-  //     setPasswordVerified(true);
-  //   }
-  // };
+    checkAuth();
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000); //milliseconds
+    }, 3200); // milliseconds
   }, []);
 
   if (isLoading) {
     return <Splash />;
-  }
-
-  else {
+  } else {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -144,7 +125,6 @@ const Login = () => {
           />
           {emailValidError ? <Text style={styles.error}>{emailValidError}</Text> : null}
 
-
           <View style={styles.visible}>
             <TextInput
               style={styles.input}
@@ -153,7 +133,6 @@ const Login = () => {
               secureTextEntry={!isSecure}
               onChangeText={value => {
                 setPassword(value);
-                // handleValidPassword(value);
               }}
             />
 
@@ -168,9 +147,6 @@ const Login = () => {
             </TouchableOpacity>
           </View>
 
-          {/* {passwordValidError ? <Text style={styles.error}>{passwordValidError}</Text> : null} */}
-
-
           <Text style={styles.forgot} onPress={onForgotpasswordpressed}>Forgot password?</Text>
           <TouchableOpacity style={styles.button} onPress={onLoginPressed}>
             <Text style={styles.text}>Login</Text>
@@ -182,12 +158,10 @@ const Login = () => {
             <View style={styles.line} />
           </View>
 
-
           <View style={styles.container2}>
             <TouchableOpacity style={styles.buttongoogle} onPress={onGooglepress}>
               <Image source={require('./google-icon.jpg')} style={styles.logogoogle} />
             </TouchableOpacity>
-
 
             <TouchableOpacity style={styles.buttongoogle} onPress={onFacebookpress}>
               <Image source={require('./facebook-icon.jpg')} style={styles.logofacebook} />
@@ -200,13 +174,15 @@ const Login = () => {
           </View>
         </View>
       </View>
-    )
+    );
   }
-}
+};
 
-export default Login
-const { height } = Dimensions.get("screen")
-const height_logo = height * 0.28
+export default Login;
+
+const { height } = Dimensions.get("screen");
+const height_logo = height * 0.28;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -214,20 +190,20 @@ const styles = StyleSheet.create({
   },
   container3: {
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   bottom: {
-    marginTop: 40
+    marginTop: 40,
   },
   link: {
     color: '#0A1C5F',
-    marginTop: 40
+    marginTop: 40,
   },
   logogoogle: {
     width: 80,
     height: 80,
     marginRight: 10,
-    marginBottom: 8
+    marginBottom: 8,
   },
   logofacebook: {
     width: 40,
@@ -240,26 +216,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    // paddingHorizontal: 15,
-    // paddingVertical: 10,
     borderRadius: 8,
     borderWidth: 0,
     borderColor: '#ccc',
-    marginTop: 0
+    marginTop: 0,
   },
   container2: {
     justifyContent: 'space-evenly',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   error: {
-    color: 'red'
+    color: 'red',
   },
   text2: {
     marginHorizontal: 10,
     marginTop: 15,
     fontWeight: '300',
     color: '#7C7676',
-    fontSize: 14
+    fontSize: 14,
   },
   container1: {
     flexDirection: 'row',
@@ -277,20 +251,20 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     fontWeight: '400',
     color: '#000000',
-    fontSize: 14
+    fontSize: 14,
   },
   visible: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   text: {
     color: '#ffffff',
     fontSize: 20,
     fontWeight: '700',
-    fontFamily: 'Inter'
+    fontFamily: 'Inter',
   },
   touch: {
     alignSelf: 'center',
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   button: {
     alignItems: 'center',
@@ -298,7 +272,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '95%',
     borderRadius: 15,
-    marginTop: 15
+    marginTop: 15,
   },
   input: {
     color: 'black',
@@ -314,12 +288,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '800',
     fontStyle: 'italic',
-    color: '#000000'
+    color: '#000000',
   },
   header: {
     height: 200,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   footer: {
     flex: 1,
@@ -327,10 +301,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 50,
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
   },
   logo: {
     width: height_logo,
-    height: height_logo
+    height: height_logo,
   },
-})
+});

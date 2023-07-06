@@ -11,7 +11,7 @@ const TeamPlayersScreen = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         'http://fantasyleague-pl7o.onrender.com/team/showPlayers',
         {
           teamId1: '62',
